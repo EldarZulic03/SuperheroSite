@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const superheroes = require('../models/superhero_info');
+const superheroePowers = require('../models/superhero_powers');
+
 
 //Get all superheroes
 router.get('/', (req,res) =>{
