@@ -132,3 +132,4 @@ superhero_info.json
 superhero_powers.json
 package-lock.json
 package.json
+.env
