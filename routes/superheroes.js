@@ -2,12 +2,17 @@ const express = require('express');
 const router = express.Router();
 const superheroes = require('../models/superhero_info');
 const superheroePowers = require('../models/superhero_powers');
-
+const heroList = require('../models/heroLists')
 
 //Get all superheroes
-router.get('/', (req,res) =>{
-
-});
+router.get('/', async (req, res) => {
+    try {
+      const superheroes = await Superhero.find();
+      res.json(superheroes);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
 
 // Get one superhero
 router.get('/:id', (req,res) =>{

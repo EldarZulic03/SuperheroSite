@@ -19,7 +19,7 @@ db.once('open', () =>console.log('Connected to Database'));
 
 app.use(express.json());
 
-const superheroesRouter = require('./routes/superheroes');
+const superheroesRouter = require('../routes/superheroes');
 app.use('/superheroes', superheroesRouter);
 
 app.listen(port, () => console.log('Server Started'));
