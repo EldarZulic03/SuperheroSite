@@ -115,6 +115,7 @@ router.get('/:id/powers', async (req, res) => {
 
 
 
+
 //Create List
 router.post('/lists', async (req, res) => {
   const { name, heroIds } = req.body;
@@ -135,42 +136,103 @@ router.post('/lists', async (req, res) => {
   res.status(201).json({ message: "List Successfully Created" });
 });
 
-//Edit List
+
+
+//Edit list
+router.post('/lists/:name', async (req, res) => {
+  const { name, heroIds } = req.body;
+
+  if (!name || !heroIds) {
+    return res.status(400).json({ error: 'Both the Name and Hero IDs are Needed in the Request Body' });
+  }
+
+  const existingList = await heroList.findOne({ name: name });
+
+  if (!existingList) {
+    return res.status(404).json({ error: 'List Name Does Not Exists' });
+  }
+
+  existingList.heroes = heroIds;
+  await existingList.save();
+
+  res.status(200).json({ message: "List Successfully Updated" });
+});
+
 router.get('/lists/:name', async (req, res) => {
   const { name } = req.params;
+
+  if (!name) {
+    return res.status(400).json({ error: 'Name is Needed in the Request Params' });
+  }
+
+  const existingList = await heroList.findOne({ name: name }).select('name heroes -_id');
+
+  if (!existingList) {
+    return res.status(404).json({ error: 'List Name Does Not Exists' });
+  }
+
+  res.status(200).json(existingList);
+});
+
+//Delete List
+router.delete('/lists/:name', async (req, res) => {
+  const { name } = req.params;
+
+  if (!name) {
+    return res.status(400).json({ error: 'Name is Needed in the Request Params' });
+  }
+
+  const deletedList = await heroList.findOneAndDelete({ name: name });
+
+  if (!deletedList) {
+    return res.status(404).json({ error: 'List Name Does Not Exists' });
+  }
+
+  res.status(200).json({ message: 'List Deleted Successfully' });
+});
+
+//get list superhero info
+router.get('/lists/:name/superheroes', async (req, res) => {
+  const { name } = req.params;
+
+  if (!name) {
+    return res.status(400).json({ error: 'Name is Needed in the Request Params' });
+  }
 
   const list = await heroList.findOne({ name: name });
 
   if (!list) {
-    return res.status(404).json({ error: 'List Not Found' });
+    return res.status(404).json({ error: 'List Name Does Not Exists' });
   }
 
-  res.json(list);
+  const heroes = await superheroInfo.find({
+    id: { $in: list.heroes }
+  }).select('-_id');
+  
+  res.status(200).json(heroes);
 });
 
-//Edit list
-router.get('/lists/:name', (req,res) =>{
 
-});
-
-//Delete List
-router.delete('/lists/:name', (req,res) =>{
-
-});
-
-//get list superhero info
-router.get('/lists/:name/superheroes', (req,res) =>{
-
-});
-
-//Add superhero to list
-router.post('/lists/:name/superheroes', (req,res) =>{
-
-});
 
 //Remove Superhero from list
-router.delete('/lists/:name/superheroes/:id', (req,res) =>{
+router.delete('/lists/:name/superheroes/:id', async (req, res) => {
+  const { name, id } = req.params;
 
+  if (!name || !id) {
+    return res.status(400).json({ error: 'Name and ID are Needed in the Request Params' });
+  }
+
+  const updatedList = await heroList.findOneAndUpdate(
+    { name: name },
+    { $pull: { heroes: id } },
+    { new: true }
+  );
+
+  if (!updatedList) {
+    return res.status(404).json({ error: 'List Name Does Not Exists' });
+  }
+
+  res.status(200).json({message: 'Superhero Removed Successfully'});
 });
 
 

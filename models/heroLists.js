@@ -6,9 +6,9 @@ const heroListSchema = mongoose.Schema({
     required: true, 
     unique: true
    },
-   superheroes: [{
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Superhero'
+   heroes: [{
+    type: Number, 
+    ref: 'heroes'
    }]
 });
 
