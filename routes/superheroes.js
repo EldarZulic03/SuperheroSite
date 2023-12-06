@@ -16,6 +16,61 @@ router.get('/', async (req, res) => {
   }
 });
 
+//Search
+router.get('/search', async (req, res) => {
+  const { field, pattern, n } = req.query;
+  
+
+  if (!field || !pattern) {
+    return res.status(400).json({ error: 'Field and pattern are required query parameters.' });
+  }
+
+  let matchingSuperheroes;
+  let heroIds = [];
+
+  if (field.toLowerCase() !== "power"){
+    matchingSuperheroes = await superheroInfo.find({ [field]: { $regex: pattern, $options: 'i' } });
+    heroIds = matchingSuperheroes.map((item) => item.id);
+  }else{
+    matchingSuperheroes = await superheroPowers.find({ [pattern]: "True" });
+    heroIds = await Promise.all(matchingSuperheroes.map(async (hero) => {
+      const heroName = hero.hero_names;
+      const matchingHero = await superheroInfo.findOne({ name: heroName });
+
+      if (matchingHero) {
+        return matchingHero.id;
+      }
+    })); 
+  }
+
+  console.log(heroIds);
+
+  heroIds = heroIds.filter((id) => id !== undefined);
+
+  let superheroesInList = await Promise.all(heroIds.map(async (id) => {
+    const superhero = await superheroInfo.findOne({ id: id });
+    if (superhero) {
+      let powers = await superheroPowers.findOne({ hero_names: superhero.name });
+      powers = remove(powers ? powers.toObject() : {});
+      delete powers._id;
+      delete powers.__v;
+      delete powers.hero_names;
+      
+      return { name: superhero.name, powers: powers };
+    }
+    return null;
+  }));
+
+  let listName = "NA";
+  
+  // cut the search to match limit
+  if (n && superheroesInList.length > n) {
+    superheroesInList = superheroesInList.slice(0, n);
+  }
+
+  res.json({ listName, superheroes: superheroesInList.filter(Boolean) });
+});
+
 // Get one superhero
 router.get('/:id', async (req, res) => {
   try {
@@ -58,64 +113,42 @@ router.get('/:id/powers', async (req, res) => {
   }
 });
 
-//Search
-router.get('/search', async (req, res) => {
-  const { field, pattern, n } = req.query;
 
-  if (!field || !pattern) {
-    return res.status(400).json({ error: 'Field and pattern are required query parameters.' });
-  }
-
-  let matchingSuperheroes;
-  let heroIds = [];
-
-  if (field.toLowerCase() !== "power") {
-    matchingSuperheroes = await superheroInfo.find({ [field]: new RegExp(pattern, 'i') });
-    heroIds = matchingSuperheroes.map((item) => item.id);
-  } else {
-    matchingSuperheroes = await superheroPowers.find({ [pattern]: true });
-    heroIds = matchingSuperheroes.map((hero) => {
-      const heroName = hero.hero_names;
-      const matchingHero = superheroInfo.find((info) => info.name === heroName);
-      if (matchingHero) {
-        return matchingHero.id;
-      }
-    });
-  }
-
-  heroIds = heroIds.filter((id) => id !== undefined);
-
-  let superheroesInList = await Promise.all(heroIds.map(async (id) => {
-    const superhero = await superheroInfo.findOne({ id: id });
-    if (superhero) {
-      let powers = await superheroPowers.findOne({ hero_names: superhero.name });
-      powers = deleteAttributes(powers)
-      return { name: superhero.name, info: superhero, powers };
-    }
-    return null;
-  }));
-
-  let listName = "NA";
-
-  // cut the search to match limit
-  if (n && superheroesInList.length > n) {
-    superheroesInList = superheroesInList.slice(0, n);
-  }
-
-  res.json({ listName, superheroes: superheroesInList.filter(Boolean) });
-});
 
 //Create List
-router.post('/lists',(req,res) =>{
+router.post('/lists', async (req, res) => {
+  const { name, heroIds } = req.body;
 
+  if (!name || !heroIds) {
+    return res.status(400).json({ error: 'Both the Name and Hero IDs are Needed in the Request Body' });
+  }
+
+  const existingList = await heroList.findOne({ name: name });
+
+  if (existingList) {
+    return res.status(409).json({ error: 'This List Name Already Exists' });
+  }
+
+  const newList = new heroList({ name: name, heroes: heroIds });
+  await newList.save();
+
+  res.status(201).json({ message: "List Successfully Created" });
 });
 
 //Edit List
-router.patch('/lists/:name', (req,res) =>{
+router.get('/lists/:name', async (req, res) => {
+  const { name } = req.params;
 
+  const list = await heroList.findOne({ name: name });
+
+  if (!list) {
+    return res.status(404).json({ error: 'List Not Found' });
+  }
+
+  res.json(list);
 });
 
-//get list
+//Edit list
 router.get('/lists/:name', (req,res) =>{
 
 });
@@ -146,8 +179,8 @@ function remove(jsonData) {
     const cleanedData = { hero_names: jsonData.hero_names };
     
     for (const key in jsonData) {
-      if (jsonData[key] === 'True') {
-        cleanedData[key] = 'True';
+      if (jsonData[key] === "True") {
+        cleanedData[key] = "True";
       }
     }
 
