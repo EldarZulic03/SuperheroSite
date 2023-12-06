@@ -50,6 +50,7 @@ const superhero_infoSchema = new mongoose.Schema({
         required: true
     }
 
-})
+}, 
+{collection: 'superheroinfo'})
 
 module.exports = mongoose.model('superheroinfo', superhero_infoSchema);

@@ -6,670 +6,670 @@ const superhero_powersSchema = new mongoose.Schema({
         required: true
       },
       Agility: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Accelerated Healing": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Lantern Power Ring": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Dimensional Awareness": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Cold Resistance": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Durability: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Stealth: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Energy Absorption": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Flight: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Danger Sense": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Underwater breathing": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Marksmanship: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Weapons Master": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Power Augmentation": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Animal Attributes": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Longevity: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Intelligence: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Super Strength": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Cryokinesis: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Telepathy: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Energy Armor": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Energy Blasts": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Duplication: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Size Changing": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Density Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Stamina: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Astral Travel": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Audio Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Dexterity: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Omnitrix: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Super Speed": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Possession: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Animal Oriented Powers": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Weapon-based Powers": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Electrokinesis: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Darkforce Manipulation": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Death Touch": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Teleportation: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Enhanced Senses": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Telekinesis: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Energy Beams": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Magic: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Hyperkinesis: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Jump: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Clairvoyance: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Dimensional Travel": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Power Sense": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Shapeshifting: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Peak Human Condition": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Immortality: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Camouflage: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Element Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Phasing: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Astral Projection": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Electrical Transport": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Fire Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Projection: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Summoning: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Enhanced Memory": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Reflexes: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Invulnerability: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Energy Constructs": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Force Fields": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Self-Sustenance": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Anti-Gravity": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Empathy: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Power Nullifier": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Radiation Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Psionic Powers": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Elasticity: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Substance Secretion": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Elemental Transmogrification": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Technopath/Cyberpath": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Photographic Reflexes": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Seismic Power": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Animation: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Precognition: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Mind Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Fire Resistance": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Power Absorption": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Enhanced Hearing": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Nova Force": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Insanity: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Hypnokinesis: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Animal Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Natural Armor": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Intangibility: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Enhanced Sight": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Molecular Manipulation": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Heat Generation": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Adaptation: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Gliding: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Power Suit": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Mind Blast": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Probability Manipulation": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Gravity Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Regeneration: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Light Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Echolocation: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Levitation: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Toxin and Disease Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Banish: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Energy Manipulation": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Heat Resistance": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Natural Weapons": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Time Travel": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Enhanced Smell": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Illusions: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Thirstokinesis: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Hair Manipulation": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Illumination: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Omnipotent: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Cloaking: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Changing Armor": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Power Cosmic": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Biokinesis: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Water Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Radiation Immunity": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Vision - Telescopic": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Toxin and Disease Resistance": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Spatial Awareness": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Energy Resistance": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Telepathy Resistance": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Molecular Combustion": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Omnilingualism: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Portal Creation": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Magnetism: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Mind Control Resistance": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Plant Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Sonar: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Sonic Scream": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Time Manipulation": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Enhanced Touch": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Magic Resistance": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Invisibility: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Sub-Mariner": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Radiation Absorption": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Intuitive aptitude": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Vision - Microscopic": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Melting: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Wind Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Super Breath": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Wallcrawling: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Vision - Night": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Vision - Infrared": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Grim Reaping": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Matter Absorption": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "The Force": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Resurrection: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Terrakinesis: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Vision - Heat": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Vitakinesis: {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Radar Sense": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Qwardian Power Ring": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Weather Control": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Vision - X-Ray": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Vision - Thermal": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Web Creation": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Reality Warping": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Odin Force": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Symbiote Costume": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Speed Force": {
-        type: Boolean,
+        type: String,
         required: true
       },"Phoenix Force": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Molecular Dissipation": {
-        type: Boolean,
+        type: String,
         required: true
       },
       "Vision - Cryo": {
-        type: Boolean,
+        type: String,
         required: true
       },
       Omnipresent: {
-        type: Boolean,
+        type: String,
         required: true
       },
       Omniscient: {
-        type: Boolean,
+        type: String,
         required: true
       }
 })
