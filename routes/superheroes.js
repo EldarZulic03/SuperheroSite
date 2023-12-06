@@ -4,6 +4,8 @@ const superheroes = require('../models/superhero_info');
 const superheroePowers = require('../models/superhero_powers');
 const heroList = require('../models/heroLists')
 
+
+
 //Get all superheroes
 router.get('/', async (req, res) => {
     try {

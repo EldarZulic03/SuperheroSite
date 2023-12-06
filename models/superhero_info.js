@@ -52,4 +52,4 @@ const superhero_infoSchema = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('superheroInfo', superhero_infoSchema);
+module.exports = mongoose.model('superheroinfo', superhero_infoSchema);

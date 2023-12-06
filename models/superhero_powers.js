@@ -674,4 +674,4 @@ const superhero_powersSchema = new mongoose.Schema({
       }
 })
 
-module.exports = mongoose.model('superheroPowers', superhero_powersSchema);
+module.exports = mongoose.model('superheropowers', superhero_powersSchema);
