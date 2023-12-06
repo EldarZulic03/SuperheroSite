@@ -20,10 +20,13 @@ db.once('open', () =>console.log('Connected to Database'));
 
 
 
-app.use(express.json());
+
 
 const superheroesRouter = require('../routes/superheroes');
 app.use('/superheroes', superheroesRouter);
+app.use(express.static('../client'));
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
 app.listen(port, () => console.log('Server Started'));
 
