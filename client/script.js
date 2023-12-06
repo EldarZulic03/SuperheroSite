@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
             try{
                 //calls api
-                const url = `http://localhost:5001/search?=${search}&pattern=${searchInpt}&n=${n}`;
+                const url = `http://localhost:5001/superheroes/search?=${search}&pattern=${searchInpt}&n=${n}`;
                 const resp = await fetch(url);
 
                 if(resp.ok){
@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         }
         try{
             //calls api
-            const url = "http://localhost:5001/lists";
+            const url = "http://localhost:5001/superheroes/lists";
             const body = JSON.stringify({name, heroes});
 
             const resp = await fetch(url,{
@@ -270,7 +270,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
         try{
             //calls api
-            const url = `http://localhost:5001/lists/${listName}`;
+            const url = `http://localhost:5001/superheroes/lists/${listName}`;
             const body = JSON.stringify({heroes});
 
             const resp = await fetch(url, {
@@ -309,7 +309,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
         try{
             //calls api
-            const url = `http://localhost:5001/lists/${deletedList}`;
+            const url = `http://localhost:5001/superheroes/lists/${deletedList}`;
             //api call 
 
             const resp  = await fetch(url,{
@@ -340,8 +340,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
         }
         try{
             //api call 
-            const url = `http://localhost:5001/lists/${listName}`;
-            const contentUrl = `http://localhost:5001/lists/${listName}/superheroes`;
+            const url = `http://localhost:5001/superheroes/lists/${listName}`;
+            const contentUrl = `http://localhost:5001/superheroes/lists/${listName}/superheroes`;
 
             const contentUrlResp = await fetch(contentUrl);
             const resp = await fetch(url);
