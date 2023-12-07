@@ -60,8 +60,9 @@ export default function Home() {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-  
+    
     const data = await response.json();
+    alert(`List ${listName} created`);
     return data;
   };
 
@@ -86,6 +87,7 @@ export default function Home() {
     }
   
     const data = await response.json();
+    alert(`List ${listName} edited`);
     return data;
   };
 
@@ -101,8 +103,9 @@ export default function Home() {
   
     // Assuming the data is an array of superheroes
     const list = data.map(hero => hero.name).join(', ');
-  
+    
     alert(`List: ${list}`);
+    return data;
   };
 
   // Function to handle delete list
@@ -127,6 +130,11 @@ export default function Home() {
     const response = await fetch(`http://localhost:5001/superheroes/search?field=${field}&pattern=${name}&n=${n}`);
     const data = await response.json();
     console.log(data);
+
+    if (!Array.isArray(data)) {
+      console.error('Data is not an array:', data);
+    }
+
     return data
   };
 
@@ -137,28 +145,12 @@ export default function Home() {
     setSearchResults(data);
   };
 
-  useEffect(() => {
-    displaySearchResults(searchResults);
-  }, [searchResults]);
+  // useEffect(() => {
+    
+  //   console.log("in the useffect" + searchResults);
+  //   displaySearchResults(searchResults);
+  // }, [searchResults]);
   
-  // Create the new function
-  const displaySearchResults = (results) => {
-    const heroDisplay = document.getElementById('heroDisplay');
-  
-    // Clear the previous results
-    heroDisplay.innerHTML = '';
-  
-    results.forEach((result) => {
-      // Create a new div for each result
-      const resultDiv = document.createElement('div');
-  
-      // Add the result data to the div
-      resultDiv.textContent = result.name; // Replace this with the actual data you want to display
-  
-      // Append the div to the heroDisplay div
-      heroDisplay.appendChild(resultDiv);
-    });
-  };
 
   const handleSearchQuery = (event) =>{
     setSearchQuery(event.target.value);
@@ -215,6 +207,9 @@ export default function Home() {
     setDeleteListName(event.target.value);
   };
 
+  const handleDisplayNum = (event) =>{
+    setDisplayNum(event.target.value);
+  };
   return (
     <>
       <Head>
@@ -278,7 +273,7 @@ export default function Home() {
             <button id='searchBtn' type="button" onClick={() => handleSearch(searchField,searchQuery,displayNum)}>Search</button>
           </div>
           <div id="retrieveForm">
-            <input type="text" value={displayNum} onChange={setDisplayNum} placeholder="Number of Results" />
+            <input type="text" value={displayNum} onChange={handleDisplayNum} placeholder="Number of Results" />
           </div>
         </div>
 
@@ -298,8 +293,15 @@ export default function Home() {
           <button onClick={handleClear}>Clear</button>
         </div>
 
+        
         <div id="smallDisplay"></div>
-        <div id="heroDisplay"></div>
+        <div id="heroDisplay">
+          {searchResults.superheroes && searchResults.superheroes.map((hero, index) => (
+          <div key={index}>
+            {hero.name}
+          </div>
+          ))}
+        </div>
 
       </main>
       </>
