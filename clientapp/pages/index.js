@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import React, { useEffect, useState } from 'react';
+import { set } from 'mongoose';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,15 +30,17 @@ export default function Home() {
   const [sortBy, setSortBy] = useState('none');
   const [displayNum, setDisplayNum] = useState('');
 
-  useEffect(() => {
-    const data = async () => {
-      await handleSearch(searchField, searchQuery, displayNum)
-    };
+  const [searchResults, setSearchResults] = useState([]);
+  // useEffect(() => {
+  //   const data = async () => {
+  //     await handleSearch(searchField, searchQuery, displayNum)
+  //   };
 
-    data();
-  },[searchField,searchQuery,displayNum]);
+  //   data();
+  // },[searchField,searchQuery,displayNum]);
   
   
+
   // Function to handle create list
   const handleCreateList = async (listName, heroIds) => {
     // console.log('create button clicked');
@@ -118,6 +121,9 @@ export default function Home() {
   };
 
   const searchbyField = async (field,name, n) => {
+    if(!n){
+      n = 7;
+    };
     const response = await fetch(`http://localhost:5001/superheroes/search?field=${field}&pattern=${name}&n=${n}`);
     const data = await response.json();
     console.log(data);
@@ -127,21 +133,31 @@ export default function Home() {
   // Function to handle search
   const handleSearch = async (searchField, searchQuery, displayNum) => {
     let n = searchNum(displayNum);
-    if(searchField === 'name'){
-      searchbyField('name',searchQuery, n);
-    }
-    // else if(searchField === 'race'){
-    //   searchbyField('race', searchQuery, n);
-    // }
-    // else if(searchField === 'publisher'){
-    //   searchbyField('publisher',searchQuery, n);
-    // }
-    // else if(searchField === 'id'){
-    //   searchById(searchQuery, n);
-    // }
-    else{
-      console.log("Invalid Search Field");
-    } 
+    const data = await searchbyField(searchField,searchQuery,n);
+    setSearchResults(data);
+  };
+
+  useEffect(() => {
+    displaySearchResults(searchResults);
+  }, [searchResults]);
+  
+  // Create the new function
+  const displaySearchResults = (results) => {
+    const heroDisplay = document.getElementById('heroDisplay');
+  
+    // Clear the previous results
+    heroDisplay.innerHTML = '';
+  
+    results.forEach((result) => {
+      // Create a new div for each result
+      const resultDiv = document.createElement('div');
+  
+      // Add the result data to the div
+      resultDiv.textContent = result.name; // Replace this with the actual data you want to display
+  
+      // Append the div to the heroDisplay div
+      heroDisplay.appendChild(resultDiv);
+    });
   };
 
   const handleSearchQuery = (event) =>{
@@ -157,10 +173,10 @@ export default function Home() {
   const searchNum = (displayNum) => {
     const n = displayNum;
     if (n === ''||n===undefined) {
-      return 11;
+      return 7;
     }
     else if(isNaN(Number(n))){
-      return 11;
+      return 7;
     }else{
       return Number(n);
     };
@@ -232,6 +248,7 @@ export default function Home() {
           <div className={styles.returnList}>
             <input type="text" value={returnListName} onChange={handleReturnListName} placeholder='Enter List Name'/>
             <button type="button" onClick={() =>handleReturnList(returnListName)}>Return List</button>
+            <button type="button" onClick={() =>handleDisplayList()}>Display List</button>
           </div>
 
           <div className={styles.deleteList}>
@@ -260,6 +277,9 @@ export default function Home() {
             </select>
             <button id='searchBtn' type="button" onClick={() => handleSearch(searchField,searchQuery,displayNum)}>Search</button>
           </div>
+          <div id="retrieveForm">
+            <input type="text" value={displayNum} onChange={setDisplayNum} placeholder="Number of Results" />
+          </div>
         </div>
 
         <div id="heroSort">
@@ -269,12 +289,8 @@ export default function Home() {
             <option value="name">Name</option>
             <option value="race">Race</option>
             <option value="publisher">Publisher</option>
-            <option value="power">Power</option>
+            <option value="id">ID</option>
           </select>
-
-          <div id="retrieveForm">
-            <input type="text" value={displayNum} onChange={setDisplayNum} placeholder="Number of Results" />
-          </div>
         </div>
 
         <div id="displayDiv">
