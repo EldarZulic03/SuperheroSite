@@ -19,7 +19,6 @@ router.get('/', async (req, res) => {
 //Search
 router.get('/search', async (req, res) => {
   const { field, pattern, n } = req.query;
-  
 
   if (!field || !pattern) {
     return res.status(400).json({ error: 'Field and pattern are required query parameters.' });
@@ -27,9 +26,39 @@ router.get('/search', async (req, res) => {
 
   let matchingSuperheroes;
   let heroIds = [];
+  let searchField;
 
-  if (field.toLowerCase() !== "power"){
-    matchingSuperheroes = await superheroInfo.find({ [field]: { $regex: pattern, $options: 'i' } });
+  switch (field.toLowerCase()) {
+    case 'name':
+      searchField = 'name';
+      break;
+    case 'race':
+      searchField = 'Race';
+      break;
+    case 'publisher':
+      searchField = 'Publisher';
+      break;
+    case 'id':
+      searchField = 'id';
+      break;
+    default:
+      return res.status(400).json({ error: 'Invalid field.' });
+  }
+
+  let searchPattern;
+
+  if (searchField === 'id') {
+    if (isNaN(pattern)) {
+      return res.status(400).json({ error: 'Invalid id.' });
+    }
+
+    searchPattern = Number(pattern);
+  } else {
+    searchPattern = { $regex: pattern, $options: 'i' };
+  }
+
+  if (searchField !== "power"){
+    matchingSuperheroes = await superheroInfo.find({ [searchField]: searchPattern });
     heroIds = matchingSuperheroes.map((item) => item.id);
   }else{
     matchingSuperheroes = await superheroPowers.find({ [pattern]: "True" });
@@ -55,21 +84,25 @@ router.get('/search', async (req, res) => {
       delete powers._id;
       delete powers.__v;
       delete powers.hero_names;
-      
-      return { name: superhero.name, powers: powers };
+      delete superhero._id;
+      return { name: superhero.name,
+        info: {...superhero._doc, name:undefined},
+        powers: powers };
     }
     return null;
   }));
 
-  let listName = "NA";
-  
   // cut the search to match limit
   if (n && superheroesInList.length > n) {
     superheroesInList = superheroesInList.slice(0, n);
   }
-
-  res.json({ listName, superheroes: superheroesInList.filter(Boolean) });
+  
+  res.json({ superheroes: superheroesInList.filter(Boolean) });
 });
+
+
+
+
 
 // Get one superhero
 router.get('/:id', async (req, res) => {

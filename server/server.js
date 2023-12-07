@@ -24,7 +24,7 @@ app.use(express.json());
 
 const superheroesRouter = require('../routes/superheroes');
 app.use('/superheroes', superheroesRouter);
-app.use(express.static('../client'));
+app.use(express.static(path.join(__dirname, '../clientapp/out')));
 
 // app.use(express.urlencoded({extended:true}));
 
