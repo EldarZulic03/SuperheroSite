@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const hero_display = document.getElementById('hero_display');
     const small_HD = document.getElementById('small_display');
 
-    const display_num = document.getElementById('display_number')
+    const display_num = document.getElementById('display_number');
     let n = 6;
 
     //function to display the searched heroes
