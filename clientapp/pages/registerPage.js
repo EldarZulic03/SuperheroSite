@@ -38,7 +38,7 @@ export default function  RegisterPage() {
           console.log(data);
           localStorage.setItem('token', data.token);
           alert('You have successfully Registered, Make Sure to Verify!');
-          router.push('/');
+          router.push('/homePage.html');
       }).catch((err) => alert(err));
 
     console.log(`Username: ${username}, Password: ${password}`);

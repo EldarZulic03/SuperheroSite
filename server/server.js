@@ -63,3 +63,7 @@ const loadDataIfEmpty = async (fileName, collection) => {
 
 loadDataIfEmpty('superhero_info.json', 'superheroinfo');
 loadDataIfEmpty('superhero_powers.json', 'superheropowers');
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../clientapp/out/landing.html'));
+});

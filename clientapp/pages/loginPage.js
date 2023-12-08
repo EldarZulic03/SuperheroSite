@@ -38,7 +38,7 @@ export default function LoginPage() {
             console.log(data);
             localStorage.setItem('token', data.token);
             alert('You have successfully logged in!');
-            router.push('/');
+            router.push('/homePage.html');
         }).catch((err) => alert(err));
 
     // console.log(`Username: ${username}, Password: ${password}`);

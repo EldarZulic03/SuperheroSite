@@ -8,20 +8,20 @@ import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export default function HomePage() {
   // Variables for create list
-  // const [listName, setListName] = useState('');
-  // const [listContent, setListContent] = useState('');
+  const [listName, setListName] = useState('');
+  const [listContent, setListContent] = useState('');
 
   // Variables for edit list
-  // const [editListName, setEditListName] = useState('');
-  // const [editListContent, setEditListContent] = useState('');
+  const [editListName, setEditListName] = useState('');
+  const [editListContent, setEditListContent] = useState('');
 
   // Variables for return list
   const [returnListName, setReturnListName] = useState('');
 
   // Variables for delete list
-  // const [deleteListName, setDeleteListName] = useState('');
+  const [deleteListName, setDeleteListName] = useState('');
 
   // Variables for search
   const [searchField, setSearchField] = useState('name');
@@ -42,71 +42,71 @@ export default function Home() {
   
 
   // Function to handle create list
-  // const handleCreateList = async (listName, heroIds) => {
-  //   // console.log('create button clicked');
-  //   const heroIdsArray = heroIds.split(',').map(Number);
+  const handleCreateList = async (listName, heroIds) => {
+    // console.log('create button clicked');
+    const heroIdsArray = heroIds.split(',').map(Number);
   
-  //   const response = await fetch('http://localhost:5001/superheroes/lists', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       name: listName,
-  //       heroIds: heroIdsArray,
-  //     }),
-  //   });
+    const response = await fetch('http://localhost:5001/superheroes/lists', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: listName,
+        heroIds: heroIdsArray,
+      }),
+    });
   
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-  //   }
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     
-  //   const data = await response.json();
-  //   alert(`List ${listName} created`);
-  //   return data;
-  // };
+    const data = await response.json();
+    alert(`List ${listName} created`);
+    return data;
+  };
 
   // Function to handle edit list
-  // const handleEditList = async (listName, heroIds) => {
-  //   // console.log('edit button clicked');
-  //   const heroIdsArray = heroIds.split(',').map(Number);
+  const handleEditList = async (listName, heroIds) => {
+    // console.log('edit button clicked');
+    const heroIdsArray = heroIds.split(',').map(Number);
   
-  //   const response = await fetch(`http://localhost:5001/superheroes/lists/${listName}`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       name: listName,
-  //       heroIds: heroIdsArray,
-  //     }),
-  //   });
+    const response = await fetch(`http://localhost:5001/superheroes/lists/${listName}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: listName,
+        heroIds: heroIdsArray,
+      }),
+    });
   
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-  //   }
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
   
-  //   const data = await response.json();
-  //   alert(`List ${listName} edited`);
-  //   return data;
-  // };
+    const data = await response.json();
+    alert(`List ${listName} edited`);
+    return data;
+  };
 
   
 
   // Function to handle delete list
-  // const handleDeleteList = async (listName) => {
-  //   // console.log('delete button clicked');
-  //   const response = await fetch(`http://localhost:5001/superheroes/lists/${listName}`, {
-  //     method: 'DELETE',
-  //   });
+  const handleDeleteList = async (listName) => {
+    // console.log('delete button clicked');
+    const response = await fetch(`http://localhost:5001/superheroes/lists/${listName}`, {
+      method: 'DELETE',
+    });
   
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-  //   }
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
   
-  //   const data = await response.json();
-  //   return data;
-  // };
+    const data = await response.json();
+    return data;
+  };
 
   const searchbyField = async (field,name, n) => {
     if(!n){
@@ -169,19 +169,19 @@ export default function Home() {
     };
   };
   // Function to handle sort
-  // const handleSort = () => {
+  const handleSort = () => {
     
-  // };
+  };
 
   // Function to handle clear
   const handleClear = () => {
     // Clear textboxes
-    // setListName('');
-    // setListContent('');
-    // setEditListName('');
-    // setEditListContent('');
+    setListName('');
+    setListContent('');
+    setEditListName('');
+    setEditListContent('');
     setReturnListName('');
-    // setDeleteListName('');
+    setDeleteListName('');
     setSearchField('name');
     setSearchQuery('');
     setDisplayNum('');
@@ -192,29 +192,29 @@ export default function Home() {
     setExpandedHeroes([]);
   };
   
-  // const handleListName = (event) =>{
-  //   setListName(event.target.value);
-  // };
+  const handleListName = (event) =>{
+    setListName(event.target.value);
+  };
 
-  // const handleListContent = (event) =>{
-  //   setListContent(event.target.value);
-  // };
+  const handleListContent = (event) =>{
+    setListContent(event.target.value);
+  };
 
-  // const handleEditListName = (event) =>{
-  //   setEditListName(event.target.value);
-  // };
+  const handleEditListName = (event) =>{
+    setEditListName(event.target.value);
+  };
 
-  // const handleEditListContent = (event) =>{
-  //   setEditListContent(event.target.value);
-  // };
+  const handleEditListContent = (event) =>{
+    setEditListContent(event.target.value);
+  };
 
   const handleReturnListName = (event) =>{
     setReturnListName(event.target.value);
   };
   
-  // const handleDeleteListName = (event) =>{
-  //   setDeleteListName(event.target.value);
-  // };
+  const handleDeleteListName = (event) =>{
+    setDeleteListName(event.target.value);
+  };
 
   const handleDisplayNum = (event) =>{
     setDisplayNum(event.target.value);
@@ -229,29 +229,30 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
 
-        <Link href='/loginPage'>
+        {/* <Link href='/loginPage'>
           <button type="button">Login</button>
-        </Link>
+        </Link> */}
+        <Link href='/newPage'>New Page</Link>
 
         <h1>Superheroes!</h1>
-
+        <h3>Welcome! You Are Logged In, Have Fun!</h3>
         <div className={styles.results} id = "results"></div>
         <div className={styles.favDiv}>
           <h2>Favourites List</h2>
 
           {/* CREATE LISTS */}
-          {/* <div className={styles.createList}>
+          <div className={styles.createList}>
             <input type="text" value={listName} onChange={handleListName} placeholder="Enter List Name" />
             <input type="text" value={listContent} onChange={handleListContent} placeholder="Enter Hero IDs" />
             <button type="button" onClick={() =>handleCreateList(listName,listContent)}>Create List</button>
-          </div> */}
+          </div>
         
           {/* EDIT LISTS */}
-          {/* <div className={styles.editList}>
+          <div className={styles.editList}>
             <input type="text" value={editListName} onChange={handleEditListName} placeholder='Enter List Name'/>
             <input type="text" value={editListContent} onChange={handleEditListContent} placeholder='Enter Hero IDs'/>
             <button type="button" onClick={() =>handleEditList(editListName, editListContent)}>Edit List</button>
-          </div> */}
+          </div>
 
           {/* RETURN LISTS */}
           <div className={styles.returnList}>
@@ -260,11 +261,11 @@ export default function Home() {
             {/* <button type="button" onClick={() =>handleDisplayList()}>Display List</button> */}
           </div>
 
-          {/* <div className={styles.deleteList}>
+          <div className={styles.deleteList}>
             <input type="text" value={deleteListName} onChange={handleDeleteListName} placeholder='Enter List Name'/>
             <button type="button" onClick={() => handleDeleteList(deleteListName)}>Delete List</button>
-          </div>*/}
-        </div> 
+          </div>
+        </div>
 
         <ul id="lists"></ul>
 

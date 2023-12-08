@@ -216,6 +216,28 @@ router.post('/lists', async (req, res) => {
   res.status(201).json({ message: "List Successfully Created" });
 });
 
+router.post('/newlists', async (req, res) => {
+  const { name, heroIds, username, description, isPublic, email } = req.body;
+
+  if (!name || !heroIds || !username) {
+    return res.status(400).json({ error: 'Both the Name and Hero IDs are Needed in the Request Body' });
+  }
+
+  const existingList = await heroList.findOne({ name: name });
+
+  if (existingList) {
+    return res.status(409).json({ error: 'This List Name Already Exists' });
+  }
+
+  const newList = new heroList({ name: name, heroes: heroIds, username: username, description: description, isPublic: isPublic });
+  await newList.save();
+
+  const user = await users.findOne({ email: email });
+  user.lists.push(name); // add list to user
+
+  res.status(201).json({ message: "List Successfully Created" });
+});
+
 
 
 //Edit list
@@ -238,6 +260,7 @@ router.post('/lists/:name', async (req, res) => {
   res.status(200).json({ message: "List Successfully Updated" });
 });
 
+// Get List
 router.get('/lists/:name', async (req, res) => {
   const { name } = req.params;
 
@@ -491,5 +514,10 @@ async function checkToken(req, res, next) {
     res.status(403).json({ error: 'Invalid token' });
   }
 }
+
+
+
+
+
 
 module.exports = router;

@@ -23,6 +23,10 @@ const siteUserSchema = mongoose.Schema({
         type: Boolean,
         default: true,
         required: true
+    },
+    lists:{
+        type: [String],
+        default: []
     }
 });
 
