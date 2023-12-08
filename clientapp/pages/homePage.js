@@ -38,22 +38,27 @@ export default function HomePage() {
   const [listResults, setListResults] = useState([]);
 
   const [expandedList, setExpandedList] = useState([]);
-  
-  
+  const [description, setDescription] = useState('');
+  const [isPublic, setIsPublic] = useState(false);
 
   // Function to handle create list
-  const handleCreateList = async (listName, heroIds) => {
+  const handleCreateList = async (listName, heroIds, description, isPublic) => {
     // console.log('create button clicked');
     const heroIdsArray = heroIds.split(',').map(Number);
-  
+    
+    const token = localStorage.getItem('token');
+
     const response = await fetch('http://localhost:5001/superheroes/lists', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
         name: listName,
         heroIds: heroIdsArray,
+        description: description,
+        isPublic: isPublic
       }),
     });
   
@@ -219,6 +224,14 @@ export default function HomePage() {
   const handleDisplayNum = (event) =>{
     setDisplayNum(event.target.value);
   };
+  
+  const handleDescriptionChange = (event) =>{
+    setDescription(event.target.value);
+  };
+
+  const handlePublicChange = (event) =>{
+    setIsPublic(event.target.checked);
+  }
   return (
     <>
       <Head>
@@ -228,11 +241,6 @@ export default function HomePage() {
         <link rel="stylesheet" href="placeholder" />
       </Head>
       <main className={styles.main}>
-
-        {/* <Link href='/loginPage'>
-          <button type="button">Login</button>
-        </Link> */}
-        <Link href='/newPage'>New Page</Link>
 
         <h1>Superheroes!</h1>
         <h3>Welcome! You Are Logged In, Have Fun!</h3>
@@ -244,7 +252,9 @@ export default function HomePage() {
           <div className={styles.createList}>
             <input type="text" value={listName} onChange={handleListName} placeholder="Enter List Name" />
             <input type="text" value={listContent} onChange={handleListContent} placeholder="Enter Hero IDs" />
-            <button type="button" onClick={() =>handleCreateList(listName,listContent)}>Create List</button>
+            <input type='text' value={description} onchange={handleDescriptionChange} placeholder='Enter Description'/>
+            <input type='checkbox' checked={isPublic} onChange={handlePublicChange}/>Public
+            <button type="button" onClick={() =>handleCreateList(listName,listContent,description,isPublic)}>Create List</button>
           </div>
         
           {/* EDIT LISTS */}

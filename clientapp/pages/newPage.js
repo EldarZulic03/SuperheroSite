@@ -16,7 +16,7 @@ export default function NewPage() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `${token}`
+                'Authorization': `Bearer ${token}`
             },
         })
         .then(response => {
@@ -25,20 +25,22 @@ export default function NewPage() {
                     throw new Error(`Error: ${data.error}`);
                 })
             }})
-        .then(data => {  
+        .then(data => {
+            router.push('/homePage.html');
             alert('Authentication Successful!');
             console.log(data.message);
         })
         .catch(error => {
             console.log(error.message);
             alert('You must be logged in to view this page');
-            router.push('/');
+            // alert('You must be logged in to view this page');
+            router.push('/index.html');
         });
     },[]);
 
   return (
     <div>
-      <h2>New Page</h2>
+      <h2>Authenticating...</h2>
     </div>
   );
 }

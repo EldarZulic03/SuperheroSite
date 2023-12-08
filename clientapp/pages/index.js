@@ -233,6 +233,10 @@ export default function Home() {
           <button type="button">Login</button>
         </Link>
 
+        <Link href='/newPage'>
+            <button type="button">Authenticate</button>
+        </Link>
+
         <h1>Superheroes!</h1>
 
         <div className={styles.results} id = "results"></div>

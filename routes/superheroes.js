@@ -216,8 +216,10 @@ router.post('/lists', async (req, res) => {
   res.status(201).json({ message: "List Successfully Created" });
 });
 
-router.post('/newlists', async (req, res) => {
-  const { name, heroIds, username, description, isPublic, email } = req.body;
+// Authenticated User Create List
+router.post('/newlists', checkToken, async (req, res) => {
+  const { name, heroIds, description, isPublic } = req.body;
+  const {user} = req;
 
   if (!name || !heroIds || !username) {
     return res.status(400).json({ error: 'Both the Name and Hero IDs are Needed in the Request Body' });
@@ -229,16 +231,20 @@ router.post('/newlists', async (req, res) => {
     return res.status(409).json({ error: 'This List Name Already Exists' });
   }
 
-  const newList = new heroList({ name: name, heroes: heroIds, username: username, description: description, isPublic: isPublic });
+  const newList = new heroList({ name: name, heroes: heroIds, username: user.username, description: description, isPublic: isPublic });
   await newList.save();
 
-  const user = await users.findOne({ email: email });
-  user.lists.push(name); // add list to user
+  const userRecord = await users.findOne({ username: user.email });
+  userRecord.lists.push(name); // add list to user
 
   res.status(201).json({ message: "List Successfully Created" });
 });
 
+// Authenticate
+router.post('/authenticate', checkToken, async (req, res) => {
 
+  res.status(200).json({ message: 'User Authenticated' });
+});
 
 //Edit list
 router.post('/lists/:name', async (req, res) => {
@@ -454,10 +460,7 @@ router.post('/changePassword', checkToken, async (req, res) => {
   }
 });
 
-router.post('/authenticate', checkToken, async (req, res) => {
 
-  res.status(200).json({ message: 'User Authenticated' });
-});
 
 function remove(jsonData) {
   if (jsonData && jsonData.hero_names) {
@@ -501,8 +504,14 @@ async function verifyAccount(name, email) {
 }
 
 async function checkToken(req, res, next) {
-  const token = req.headers['authorization'];
-  console.log('Token from request:', token); //debugging
+  const authHeader = req.headers['authorization'];
+  console.log('Authorization header:', authHeader); //debugging
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Missing or invalid Authorization header' });
+  }
+
+  const token = authHeader.split(' ')[1]; // Split on space and take the second part
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
