@@ -232,6 +232,7 @@ export default function Home() {
         <Link href='/loginPage'>
           <button type="button">Login</button>
         </Link>
+        <Link href='/newPage'>New Page</Link>
 
         <h1>Superheroes!</h1>
 

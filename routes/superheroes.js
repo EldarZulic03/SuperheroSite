@@ -431,6 +431,11 @@ router.post('/changePassword', checkToken, async (req, res) => {
   }
 });
 
+router.post('/authenticate', checkToken, async (req, res) => {
+
+  res.status(200).json({ message: 'User Authenticated' });
+});
+
 function remove(jsonData) {
   if (jsonData && jsonData.hero_names) {
     const cleanedData = { hero_names: jsonData.hero_names };
@@ -474,11 +479,13 @@ async function verifyAccount(name, email) {
 
 async function checkToken(req, res, next) {
   const token = req.headers['authorization'];
+  console.log('Token from request:', token); //debugging
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Add the decoded payload to the request object
-    next(); // Proceed to the next middleware function or route handler
+    console.log('Decoded token:', decoded); //debugging
+    req.user = decoded;
+    next();
   } catch (err) {
     console.error('Token verification failed:', err);
     res.status(403).json({ error: 'Invalid token' });
