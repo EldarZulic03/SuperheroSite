@@ -31,13 +31,12 @@ export default function Home() {
   const [displayNum, setDisplayNum] = useState('');
 
   const [searchResults, setSearchResults] = useState([]);
-  // useEffect(() => {
-  //   const data = async () => {
-  //     await handleSearch(searchField, searchQuery, displayNum)
-  //   };
 
-  //   data();
-  // },[searchField,searchQuery,displayNum]);
+  const [expandedHeroes, setExpandedHeroes] = useState([]);
+
+  const [listResults, setListResults] = useState([]);
+
+  const [expandedList, setExpandedList] = useState([]);
   
   
 
@@ -91,22 +90,7 @@ export default function Home() {
     return data;
   };
 
-  // Function to handle return list
-  const handleReturnList = async (listName) => {
-    const response = await fetch(`http://localhost:5001/superheroes/lists/${listName}`);
   
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-  
-    const data = await response.json();
-  
-    // Assuming the data is an array of superheroes
-    const list = data.map(hero => hero.name).join(', ');
-    
-    alert(`List: ${list}`);
-    return data;
-  };
 
   // Function to handle delete list
   const handleDeleteList = async (listName) => {
@@ -145,12 +129,22 @@ export default function Home() {
     setSearchResults(data);
   };
 
-  // useEffect(() => {
-    
-  //   console.log("in the useffect" + searchResults);
-  //   displaySearchResults(searchResults);
-  // }, [searchResults]);
+  // Function to handle return list
+  const handleReturnList = async (listName) => {
+    const response = await fetch(`http://localhost:5001/superheroes/lists/${listName}/superheroes`);
   
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  
+    const data = await response.json();
+    
+    if (!Array.isArray(data)) {
+      console.error('Data is not an array:', data);
+    }
+    
+    setListResults(data);
+  };
 
   const handleSearchQuery = (event) =>{
     setSearchQuery(event.target.value);
@@ -180,7 +174,21 @@ export default function Home() {
 
   // Function to handle clear
   const handleClear = () => {
-    
+    // Clear textboxes
+    setListName('');
+    setListContent('');
+    setEditListName('');
+    setEditListContent('');
+    setReturnListName('');
+    setDeleteListName('');
+    setSearchField('name');
+    setSearchQuery('');
+    setDisplayNum('');
+    setListResults([]);
+
+    // Clear search results
+    setSearchResults([]);
+    setExpandedHeroes([]);
   };
   
   const handleListName = (event) =>{
@@ -243,7 +251,7 @@ export default function Home() {
           <div className={styles.returnList}>
             <input type="text" value={returnListName} onChange={handleReturnListName} placeholder='Enter List Name'/>
             <button type="button" onClick={() =>handleReturnList(returnListName)}>Return List</button>
-            <button type="button" onClick={() =>handleDisplayList()}>Display List</button>
+            {/* <button type="button" onClick={() =>handleDisplayList()}>Display List</button> */}
           </div>
 
           <div className={styles.deleteList}>
@@ -290,15 +298,53 @@ export default function Home() {
 
         <div id="displayDiv">
           <h2>Displayed SuperHeroes</h2>
-          <button onClick={handleClear}>Clear</button>
+          <button onClick={() =>handleClear}>Clear</button>
         </div>
 
-        
-        <div id="smallDisplay"></div>
+        <h2>List Content:</h2>
+        <div id="smallDisplay">
+          {listResults && listResults.map((hero, index) => (
+            <div key={index}>
+              {hero.name}
+              <button onClick={() =>{
+                if (expandedList.includes(index)) {
+                  setExpandedList(expandedList.filter(i => i !== index));
+                } else {
+                  setExpandedList([...expandedList, index]);
+                }
+              }}>
+                Expand
+              </button>
+              {expandedList.includes(index) && (
+                <div>
+                  <div>Info: {JSON.stringify(hero.info)}</div>
+                  <div>Powers: {JSON.stringify(hero.powers)}</div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <h2>Search Results:</h2>
         <div id="heroDisplay">
           {searchResults.superheroes && searchResults.superheroes.map((hero, index) => (
           <div key={index}>
             {hero.name}
+            <button onClick={() => {
+              if (expandedHeroes.includes(index)) {
+              setExpandedHeroes(expandedHeroes.filter(i => i !== index));
+            } else {
+              setExpandedHeroes([...expandedHeroes, index]);
+            }
+            }}>
+            Expand
+            </button>
+            {expandedHeroes.includes(index) && (
+            <div>
+              <div>Info: {JSON.stringify(hero.info)}</div>
+              <div>Powers: {JSON.stringify(hero.powers)}</div>
+            </div>
+            )}
           </div>
           ))}
         </div>
