@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function  RegisterPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const router = useRouter();
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
   };
@@ -25,14 +26,20 @@ export default function  RegisterPage() {
         },
         body: JSON.stringify({ username, email, password }),
         })
-        .then((res) => res.json())
-        .then((data) => {
-            console.log(data);
-            localStorage.setItem('token', data.token);
-            alert('You have successfully registered!');
-            // redirect to home page
-        })
-        .catch((err) => console.log(err));
+        .then((res) => {
+          if(!res.ok){
+              return res.json().then((data) => {
+                  throw new Error(data.error);
+              })
+          }
+          return res.json();
+      })
+      .then((data) => {
+          console.log(data);
+          localStorage.setItem('token', data.token);
+          alert('You have successfully Registered, Make Sure to Verify!');
+          router.push('/');
+      }).catch((err) => alert(err));
 
     console.log(`Username: ${username}, Password: ${password}`);
   }

@@ -300,9 +300,19 @@ router.delete('/lists/:name/superheroes/:id', async (req, res) => {
 router.post('/register', async (req, res) => {
   const { email, password, username } = req.body;
 
-  if (!email || !password || !username) {
-    return res.status(400).json({ error: 'Email, Password and Username are Needed in the Request Body' });
+  if (!email) {
+    return res.status(400).json({ error: 'Enter an Email!' });
   }
+  if (!password) {
+    return res.status(400).json({ error: 'Enter a Password!' });
+  }
+  if (!username) {
+    return res.status(400).json({ error: 'Enter a Username!' });
+  }
+  if(!email.includes('@') || !email.includes('.')){
+    return res.status(400).json({ error: 'Enter a Valid Email' });
+  }
+
 
   const existingUser = await users.findOne({ email: email });
 
@@ -334,7 +344,7 @@ router.get('/verify/account', async (req, res) => {
   const existingUser = await users.findOne({ email: email });
 
   if (!existingUser) {
-    return res.status(404).json({ error: 'User Not Found' });
+    return res.status(404).json({ error: 'User Not Found' });	
   }
 
   if (existingUser.verification) {
@@ -344,15 +354,60 @@ router.get('/verify/account', async (req, res) => {
   existingUser.verification = true;
   await existingUser.save();
   
-  res.redirect('http://localhost:5001/');
+  res.redirect('/verificationPage.html');
 });
+
 
 // login user
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and Password are Needed in the Request Body' });
+  if (!email) {
+    return res.status(400).json({ error: 'Enter an Email!' });
+  }
+  if (!password) {
+    return res.status(400).json({ error: 'Enter a Password!' });
+  }
+  if(!email.includes('@') || !email.includes('.')){
+    return res.status(400).json({ error: 'Enter a Valid Email' });
+  }
+
+  const existingUser = await users.findOne({ email: email });
+
+  if (!existingUser) {
+    return res.status(404).json({ error: 'User Not Found' });
+
+  }
+
+  if (!existingUser.verification) {
+    return res.status(403).json({ error: 'User Not Verified' });
+  }
+  if(!existingUser.activated){
+    return res.status(403).json({ error: 'User Not Activated, Contact Admin to Reactivate!' });
+  }
+
+  if (await argon2.verify(existingUser.password, password)) {
+    let token = jwt.sign({ email: existingUser.email }, process.env.JWT_SECRET, { expiresIn: '2h' });
+    res.status(200).json({ message: 'User Successfully Logged In', token: token });
+  } else {
+    res.status(403).json({ error: 'Incorrect Password' });
+  }
+});
+
+router.post('/resend-email', async (req, res) => {
+  const email = req.body.email
+  verifyAccount('user',email );
+  if (!email) {
+    return res.status(400).json({ error: 'Enter an Email!' });
+  }
+  return res.status(200).json({ message: 'Email Sent' });
+});
+
+router.post('/changePassword', checkToken, async (req, res) => {
+  const { email, password, newPassword } = req.body;
+
+  if (!email || !password || !newPassword) {
+    return res.status(400).json({ error: 'Email, Password, and New Password are Needed in the Request Body' });
   }
 
   const existingUser = await users.findOne({ email: email });
@@ -366,10 +421,13 @@ router.post('/login', async (req, res) => {
   }
 
   if (await argon2.verify(existingUser.password, password)) {
-    let token = jwt.sign({ email: existingUser.email }, process.env.JWT_SECRET, { expiresIn: '2h' });
-    res.status(200).json({ message: 'User Successfully Logged In', token: token });
-  } else {
-    res.status(403).json({ error: 'Incorrect Password' });
+    const hashedPassword = await argon2.hash(newPassword);
+    existingUser.password = hashedPassword;
+    await existingUser.save();
+    res.status(200).json({ message: 'Password Successfully Changed' });
+  }
+  else{
+    return res.status(403).json({ error: 'Incorrect Password' });
   }
 });
 
@@ -412,6 +470,19 @@ async function verifyAccount(name, email) {
   });
 
   console.log('Verification email sent: %s', info.messageId);
+}
+
+async function checkToken(req, res, next) {
+  const token = req.headers['authorization'];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // Add the decoded payload to the request object
+    next(); // Proceed to the next middleware function or route handler
+  } catch (err) {
+    console.error('Token verification failed:', err);
+    res.status(403).json({ error: 'Invalid token' });
+  }
 }
 
 module.exports = router;

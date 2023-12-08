@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 
 export default function LoginPage() {
@@ -8,6 +9,8 @@ export default function LoginPage() {
 
   
 
+  const router = useRouter();
+  
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
@@ -35,14 +38,39 @@ export default function LoginPage() {
             console.log(data);
             localStorage.setItem('token', data.token);
             alert('You have successfully logged in!');
-            // redirect to home page
+            router.push('/');
         }).catch((err) => alert(err));
 
     // console.log(`Username: ${username}, Password: ${password}`);
   }
-
+  
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
+  };
+
+  const resendEmail = (event) => {
+    event.preventDefault();
+    fetch('/superheroes/resend-email', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email}),
+        })
+        .then((res) => {
+            if(!res.ok){
+                return res.json().then((data) => {
+                    throw new Error(data.error);
+                })
+            }
+            return res.json();
+        })
+        .then((data) => {
+            console.log(data);
+            alert('Email Sent!');
+        }).catch((err) => alert(err));
+
+
   };
   
   return (
@@ -59,6 +87,7 @@ export default function LoginPage() {
         </label>
         <input type="submit" value="Submit" />
       </form>
+      <button type='button' onClick={resendEmail}>Resend Verification Email</button>
       <Link href='/registerPage'>
         <button type='button'>Don't Have an Account? Register</button>
       </Link>

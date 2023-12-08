@@ -19,6 +19,11 @@ const siteUserSchema = mongoose.Schema({
         default: false,
         required: true
     },
+    activated:{
+        type: Boolean,
+        default: true,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('siteUsers', siteUserSchema);
