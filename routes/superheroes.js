@@ -6,6 +6,7 @@ const heroList = require('../models/heroLists');
 const users = require('../models/siteUsers');
 const argon2 = require('argon2');
 const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 
 
 // Get all superheroes
@@ -317,13 +318,13 @@ router.post('/register', async (req, res) => {
   const newUser = new users({ email: email, password: hashedPassword, username: username });
   await newUser.save();
 
-  verifyAccount(newUser.username, newuser.email);
+  verifyAccount(newUser.username, newUser.email);
 
   res.status(201).json({ message: "User Successfully Created" });
 }); 
 
 // Verify User
-router.get('/verify', async (req, res) => {
+router.get('/verify/account', async (req, res) => {
   const email = decodeURIComponent(req.query.email);
 
   if (!email) {
@@ -342,8 +343,8 @@ router.get('/verify', async (req, res) => {
 
   existingUser.verification = true;
   await existingUser.save();
-
-  res.status(200).json({ message: 'User Successfully Verified' });
+  
+  res.redirect('http://localhost:5001/');
 });
 
 // login user
@@ -399,7 +400,7 @@ async function verifyAccount(name, email) {
   });
 
   // generate verification link
-  const verificationLink = `http://localhost:8001/superheroes/verify?email=${email}=${encodeURIComponent(email)}`;
+  const verificationLink = `http://localhost:5001/superheroes/verify/account?email=${encodeURIComponent(email)}`;
 
   // send mail with defined transport object
   let info = await transporter.sendMail({

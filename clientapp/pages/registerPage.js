@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 export default function  RegisterPage() {
   const [username, setUsername] = useState('');
@@ -15,9 +16,9 @@ export default function  RegisterPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // handle login logic here
+    // handle register logic 
 
-    fetch('/superheroes/login', {
+    fetch('/superheroes/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -28,7 +29,7 @@ export default function  RegisterPage() {
         .then((data) => {
             console.log(data);
             localStorage.setItem('token', data.token);
-            alert('You have successfully logged in!');
+            alert('You have successfully registered!');
             // redirect to home page
         })
         .catch((err) => console.log(err));
@@ -42,7 +43,7 @@ export default function  RegisterPage() {
   
   return (
     <div>
-      <h2>Login</h2>
+      <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <label>
           Username:
@@ -58,6 +59,12 @@ export default function  RegisterPage() {
         </label>
         <input type="submit" value="Submit" />
       </form>
+      <Link href="/loginPage">
+        <button type='button'>Already Have an Account? Login</button>
+      </Link>
+      <Link href="/">
+        <button type='button'>Home</button>
+        </Link>
     </div>
   );
 }

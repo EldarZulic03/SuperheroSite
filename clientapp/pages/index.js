@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import React, { useEffect, useState } from 'react';
 import { set } from 'mongoose';
+import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -227,6 +228,11 @@ export default function Home() {
         <link rel="stylesheet" href="placeholder" />
       </Head>
       <main className={styles.main}>
+
+        <Link href='/loginPage'>
+          <button type="button">Login</button>
+        </Link>
+
         <h1>Superheroes!</h1>
 
         <div className={styles.results} id = "results"></div>
