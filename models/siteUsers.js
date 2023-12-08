@@ -26,7 +26,8 @@ const siteUserSchema = mongoose.Schema({
     },
     lists:{
         type: [String],
-        default: []
+        default: [],
+        required: true
     }
 });
 

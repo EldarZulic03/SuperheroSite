@@ -15,8 +15,7 @@ const heroListSchema = mongoose.Schema({
     default: Date.now
    },
    username: {
-    type: String,
-    required: true
+    type: String
    },
    description: {
     type: String

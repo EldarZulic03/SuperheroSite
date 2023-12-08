@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { set } from 'mongoose';
 import Link from 'next/link';
 
+
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
@@ -39,75 +40,16 @@ export default function Home() {
 
   const [expandedList, setExpandedList] = useState([]);
   
-  
+  const [publicLists, setPublicLists] = useState([]);
 
-  // Function to handle create list
-  // const handleCreateList = async (listName, heroIds) => {
-  //   // console.log('create button clicked');
-  //   const heroIdsArray = heroIds.split(',').map(Number);
-  
-  //   const response = await fetch('http://localhost:5001/superheroes/lists', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       name: listName,
-  //       heroIds: heroIdsArray,
-  //     }),
-  //   });
-  
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-  //   }
-    
-  //   const data = await response.json();
-  //   alert(`List ${listName} created`);
-  //   return data;
-  // };
-
-  // Function to handle edit list
-  // const handleEditList = async (listName, heroIds) => {
-  //   // console.log('edit button clicked');
-  //   const heroIdsArray = heroIds.split(',').map(Number);
-  
-  //   const response = await fetch(`http://localhost:5001/superheroes/lists/${listName}`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       name: listName,
-  //       heroIds: heroIdsArray,
-  //     }),
-  //   });
-  
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-  //   }
-  
-  //   const data = await response.json();
-  //   alert(`List ${listName} edited`);
-  //   return data;
-  // };
-
-  
-
-  // Function to handle delete list
-  // const handleDeleteList = async (listName) => {
-  //   // console.log('delete button clicked');
-  //   const response = await fetch(`http://localhost:5001/superheroes/lists/${listName}`, {
-  //     method: 'DELETE',
-  //   });
-  
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-  //   }
-  
-  //   const data = await response.json();
-  //   return data;
-  // };
-
+  useEffect(() => {
+    const fetchPublicLists = async () => {
+      const response = await fetch();
+      const data = await response.json();
+      setPublicLists(data);
+    };
+    fetchPublicLists();
+  });
   const searchbyField = async (field,name, n) => {
     if(!n){
       n = 7;
@@ -358,7 +300,11 @@ export default function Home() {
           </div>
           ))}
         </div>
+        
+        <h2>Public Lists: </h2>
+        <div>
 
+        </div>
       </main>
       </>
   )

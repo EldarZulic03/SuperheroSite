@@ -150,6 +150,15 @@ router.get('/lists/:name/superheroes', async (req, res) => {
   res.status(200).json(heroesWithPowers);
 });
 
+// get all public lists
+router.get('/publiclists', async (req, res) => {
+  try {
+    const publicLists = await heroList.find({ isPublic: true });
+    res.json(publicLists);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // Get one superhero
 router.get('/:id', async (req, res) => {
@@ -217,15 +226,22 @@ router.post('/lists', async (req, res) => {
 });
 
 // Authenticated User Create List
-router.post('/newlists', checkToken, async (req, res) => {
-  const { name, heroIds, description, isPublic } = req.body;
-  const {user} = req;
+router.post('/newlists',checkToken, async (req, res) => {
+  const { name, heroIds, description, isPublic, email } = req.body;
 
-  if (!name || !heroIds || !username) {
+  console.log(email);
+  const user = await users.findOne({ email: email });
+
+
+  if (!name || !heroIds) {
     return res.status(400).json({ error: 'Both the Name and Hero IDs are Needed in the Request Body' });
   }
 
   const existingList = await heroList.findOne({ name: name });
+
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
 
   if (existingList) {
     return res.status(409).json({ error: 'This List Name Already Exists' });
@@ -234,10 +250,64 @@ router.post('/newlists', checkToken, async (req, res) => {
   const newList = new heroList({ name: name, heroes: heroIds, username: user.username, description: description, isPublic: isPublic });
   await newList.save();
 
-  const userRecord = await users.findOne({ username: user.email });
-  userRecord.lists.push(name); // add list to user
+  
+  user.lists.push(name); // add list to user
+  await user.save(); 
 
   res.status(201).json({ message: "List Successfully Created" });
+});
+
+// Authenticated User edit List
+router.post('/newlists/:name', checkToken, async (req, res) => {
+  const { name, heroIds, description, isPublic, email } = req.body;
+
+  console.log(email);
+  const user = await users.findOne({ email: email });
+
+  if (!name || !heroIds) {
+    return res.status(400).json({ error: 'Both the Name and Hero IDs are Needed in the Request Body' });
+  }
+
+  const existingList = await heroList.findOne({ name: name });
+
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  if (!existingList) {
+    return res.status(404).json({ error: 'List not found' });
+  }
+
+  // Update the properties of the list
+  existingList.heroes = heroIds;
+  existingList.username = user.username;
+  existingList.description = description;
+  existingList.isPublic = isPublic;
+
+  // Save the list
+  await existingList.save();
+
+  res.status(200).json({ message: "List Successfully Updated" });
+});
+
+
+router.get('/verify/tokenEmail', async (req, res) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader.split(' ')[1]; // Split on space and take the second part
+  
+  if(token==null){
+    return res.status(400).json({ error: 'Token is Needed in the Request Body' });
+  }
+  jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
+    if(err){
+      return res.status(403).json({ error: 'Invalid token' });
+    }
+    let email = await users.findOne({ email: user.email });
+    if (!email) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({username: email.username, email: email.email});
+  });
 });
 
 // Authenticate
@@ -417,6 +487,7 @@ router.post('/login', async (req, res) => {
 
   if (await argon2.verify(existingUser.password, password)) {
     let token = jwt.sign({ email: existingUser.email }, process.env.JWT_SECRET, { expiresIn: '2h' });
+    // console.log('Token:', token);
     res.status(200).json({ message: 'User Successfully Logged In', token: token });
   } else {
     res.status(403).json({ error: 'Incorrect Password' });

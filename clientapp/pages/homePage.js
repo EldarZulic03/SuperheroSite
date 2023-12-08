@@ -38,8 +38,10 @@ export default function HomePage() {
   const [listResults, setListResults] = useState([]);
 
   const [expandedList, setExpandedList] = useState([]);
-  const [description, setDescription] = useState('');
   const [isPublic, setIsPublic] = useState(false);
+  const [description, setDescription] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [isEditPublic, setIsEditPublic] = useState(false);
 
   // Function to handle create list
   const handleCreateList = async (listName, heroIds, description, isPublic) => {
@@ -48,7 +50,21 @@ export default function HomePage() {
     
     const token = localStorage.getItem('token');
 
-    const response = await fetch('http://localhost:5001/superheroes/lists', {
+    const userResponse = await fetch('http://localhost:5001/superheroes/verify/tokenEmail', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    });
+    if(!userResponse.ok){
+        const errorData = await userResponse.json(); // Parse the error response to JSON
+        console.error(`HTTP error! status: ${userResponse.status}, message: ${errorData.error}`); // Print the error message
+        throw new Error(`HTTP error! status: ${userResponse.status}`);
+    }
+    const userData = await userResponse.json();
+    const email = userData.email;
+
+    const response = await fetch('http://localhost:5001/superheroes/newlists', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -58,12 +74,15 @@ export default function HomePage() {
         name: listName,
         heroIds: heroIdsArray,
         description: description,
-        isPublic: isPublic
+        isPublic: isPublic,
+        email: email
       }),
     });
   
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json(); // Parse the error response to JSON
+        console.error(`HTTP error! status: ${response.status}, message: ${errorData.error}`); // Print the error message
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
     
     const data = await response.json();
@@ -72,25 +91,47 @@ export default function HomePage() {
   };
 
   // Function to handle edit list
-  const handleEditList = async (listName, heroIds) => {
-    // console.log('edit button clicked');
+  const handleEditList = async (listName, heroIds, description, isPublic) => {
+    // console.log('create button clicked');
     const heroIdsArray = heroIds.split(',').map(Number);
-  
-    const response = await fetch(`http://localhost:5001/superheroes/lists/${listName}`, {
+    
+    const token = localStorage.getItem('token');
+
+    const userResponse = await fetch('http://localhost:5001/superheroes/verify/tokenEmail', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    });
+    if(!userResponse.ok){
+        const errorData = await userResponse.json(); // Parse the error response to JSON
+        console.error(`HTTP error! status: ${userResponse.status}, message: ${errorData.error}`); // Print the error message
+        throw new Error(`HTTP error! status: ${userResponse.status}`);
+    }
+    const userData = await userResponse.json();
+    const email = userData.email;
+
+    const response = await fetch(`http://localhost:5001/superheroes/newlists/${listName}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
         name: listName,
         heroIds: heroIdsArray,
+        description: description,
+        isPublic: isPublic,
+        email: email
       }),
     });
   
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json(); // Parse the error response to JSON
+        console.error(`HTTP error! status: ${response.status}, message: ${errorData.error}`); // Print the error message
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
-  
+    
     const data = await response.json();
     alert(`List ${listName} edited`);
     return data;
@@ -180,21 +221,7 @@ export default function HomePage() {
 
   // Function to handle clear
   const handleClear = () => {
-    // Clear textboxes
-    setListName('');
-    setListContent('');
-    setEditListName('');
-    setEditListContent('');
-    setReturnListName('');
-    setDeleteListName('');
-    setSearchField('name');
-    setSearchQuery('');
-    setDisplayNum('');
-    setListResults([]);
-
-    // Clear search results
-    setSearchResults([]);
-    setExpandedHeroes([]);
+    window.location.reload();
   };
   
   const handleListName = (event) =>{
@@ -225,13 +252,22 @@ export default function HomePage() {
     setDisplayNum(event.target.value);
   };
   
-  const handleDescriptionChange = (event) =>{
+  const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
   };
 
   const handlePublicChange = (event) =>{
     setIsPublic(event.target.checked);
   }
+
+  const handleEditDescriptionChange = (event) => {
+    setEditDescription(event.target.value);
+  };
+
+  const handleEditPublicChange = (event) =>{
+    setIsEditPublic(event.target.checked);
+  };
+
   return (
     <>
       <Head>
@@ -252,7 +288,7 @@ export default function HomePage() {
           <div className={styles.createList}>
             <input type="text" value={listName} onChange={handleListName} placeholder="Enter List Name" />
             <input type="text" value={listContent} onChange={handleListContent} placeholder="Enter Hero IDs" />
-            <input type='text' value={description} onchange={handleDescriptionChange} placeholder='Enter Description'/>
+            <input type="text" value={description} onChange={handleDescriptionChange} placeholder='Enter Description'/>
             <input type='checkbox' checked={isPublic} onChange={handlePublicChange}/>Public
             <button type="button" onClick={() =>handleCreateList(listName,listContent,description,isPublic)}>Create List</button>
           </div>
@@ -261,7 +297,9 @@ export default function HomePage() {
           <div className={styles.editList}>
             <input type="text" value={editListName} onChange={handleEditListName} placeholder='Enter List Name'/>
             <input type="text" value={editListContent} onChange={handleEditListContent} placeholder='Enter Hero IDs'/>
-            <button type="button" onClick={() =>handleEditList(editListName, editListContent)}>Edit List</button>
+            <input type='text' value={editDescription} onChange={handleEditDescriptionChange} placeholder='Enter Description'/>
+            <input type='checkbox' checked={isEditPublic} onChange={handleEditPublicChange}/>Public
+            <button type="button" onClick={() =>handleEditList(editListName, editListContent, editDescription,isEditPublic)}>Edit List</button>
           </div>
 
           {/* RETURN LISTS */}
