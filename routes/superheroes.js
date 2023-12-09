@@ -153,8 +153,33 @@ router.get('/lists/:name/superheroes', async (req, res) => {
 // get all public lists
 router.get('/publiclists', async (req, res) => {
   try {
-    const publicLists = await heroList.find({ isPublic: true });
-    res.json(publicLists);
+    const publicLists = await heroList.find({ isPublic: true }).lean();
+
+    const modifiedLists = await Promise.all(publicLists.map(async (list) => {
+      const heroes = await superheroInfo.find({
+        id: { $in: list.heroes }
+      }).select('-_id -__v');
+
+      const heroesWithPowers = await Promise.all(heroes.map(async (hero) => {
+        let powers = await superheroPowers.findOne({ hero_names: hero.name });
+        powers = remove(powers ? powers.toObject() : {});
+        delete powers._id;
+        delete powers.__v;
+        delete powers.hero_names;
+        return {
+          name: hero.name,
+          info: hero,
+          powers: powers
+        };
+      }));
+
+      list.heroes = heroesWithPowers;
+      delete list._id;
+      delete list.__v;
+      return list;
+    }));
+
+    res.json(modifiedLists);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

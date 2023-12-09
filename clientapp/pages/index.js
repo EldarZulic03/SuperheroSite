@@ -44,12 +44,13 @@ export default function Home() {
 
   useEffect(() => {
     const fetchPublicLists = async () => {
-      const response = await fetch();
+      const response = await fetch('http://localhost:5001/superheroes/publiclists');
       const data = await response.json();
       setPublicLists(data);
     };
     fetchPublicLists();
-  });
+  },[]);
+
   const searchbyField = async (field,name, n) => {
     if(!n){
       n = 7;
@@ -301,9 +302,30 @@ export default function Home() {
           ))}
         </div>
         
-        <h2>Public Lists: </h2>
-        <div>
-
+        <h2>Public Lists:</h2>
+        <div id="publicListsDisplay">
+          {publicLists && publicLists.map((list, index) => (
+          <div key={index}>
+            <div>List Name: {list.name}</div>
+            <div>Author: {list.username}</div>
+            <div>Number of Heroes: {list.heroes.length}</div>
+            <button onClick={() => {
+              if (expandedList.includes(index)) {
+                setExpandedList(expandedList.filter(i => i !== index));
+              } else {
+                setExpandedList([...expandedList, index]);
+              }
+            }}>
+            Expand
+            </button>
+            {expandedList.includes(index) && (
+            <div>
+              <div>List Name: {list.name}</div>
+              <div>Heroes: {JSON.stringify(list.heroes)}</div>
+            </div>
+            )}
+          </div>
+          ))}
         </div>
       </main>
       </>
