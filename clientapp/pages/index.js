@@ -181,6 +181,7 @@ export default function Home() {
         </Link>
 
         <h1>Superheroes!</h1>
+        <p>A site that lets you search all of your favourite superheroes and put them into lists for all your friends to see!</p>
         <h2>Guest Home Page</h2>
 
         <div className={styles.results} id = "results"></div>
