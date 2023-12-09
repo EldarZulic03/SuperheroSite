@@ -181,6 +181,7 @@ export default function Home() {
         </Link>
 
         <h1>Superheroes!</h1>
+        <h2>Guest Home Page</h2>
 
         <div className={styles.results} id = "results"></div>
         <div className={styles.favDiv}>
@@ -304,28 +305,60 @@ export default function Home() {
         
         <h2>Public Lists:</h2>
         <div id="publicListsDisplay">
-          {publicLists && publicLists.map((list, index) => (
-          <div key={index}>
-            <div>List Name: {list.name}</div>
-            <div>Author: {list.username}</div>
-            <div>Number of Heroes: {list.heroes.length}</div>
-            <button onClick={() => {
-              if (expandedList.includes(index)) {
-                setExpandedList(expandedList.filter(i => i !== index));
-              } else {
-                setExpandedList([...expandedList, index]);
-              }
-            }}>
-            Expand
-            </button>
-            {expandedList.includes(index) && (
-            <div>
-              <div>List Name: {list.name}</div>
-              <div>Heroes: {JSON.stringify(list.heroes)}</div>
-            </div>
-            )}
-          </div>
-          ))}
+          {publicLists && publicLists.length >0 && publicLists.map((list, index) => {
+            const averageRating = list.ratings.length > 0 ? 
+            list.ratings.reduce((a, b) => a + b, 0) / list.ratings.length : 
+            0;
+
+            return (
+              <div key={index}>
+                <div>List Name: {list.name}</div>
+                <div>Author: {list.username}</div>
+                <div>Number of Heroes: {list.heroes.length}</div>
+                <div>Average Rating: {averageRating}</div>
+                <button onClick={() => {
+                  if (expandedList.includes(index)) {
+                    setExpandedList(expandedList.filter(i => i !== index));
+                  } else {
+                    setExpandedList([...expandedList, index]);
+                  }
+                }}>
+                Expand
+                </button>
+                {expandedList.includes(index) && (
+                <div>
+                  <div>List Name: {list.name}</div>
+                  <div>Heroes: 
+                    {list.heroes.map((hero,heroIndex) =>(
+                      <div key={heroIndex}>
+                        <div>Name: {hero.name}</div>
+                        <div>Info: 
+                          <ul>
+                            {Object.keys(hero.info).map((key, i) => (
+                              <li key={i}>
+                                {key}: {hero.info[key]}
+                              </li>
+                            ))}
+                          </ul>
+                          </div>
+                        <div>Powers:
+                          <ul>
+                            {Object.keys(hero.powers).map((key, i) => (
+                              <li key={i}>
+                                {key}: {hero.powers[key]}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        </div>
+
+                    ))}
+                    </div>
+                </div>
+              )}
+              </div>
+            );
+          })}
         </div>
       </main>
       </>

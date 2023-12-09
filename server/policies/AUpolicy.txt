@@ -1,0 +1,45 @@
+Acceptable Use Policy (AUP)
+
+Last Updated on December 6, 2023
+
+Welcome to Superhero Site! This Acceptable Use Policy outlines the acceptable and prohibited uses of our web application. By using our application, you agree to comply with this policy.
+
+1. Prohibited Activities
+
+You are expressly prohibited from engaging in the following activities on or through our web application:
+
+- Unauthorized Access: Attempting to access accounts, systems, or data belonging to other users without permission.
+
+- Malicious Use: Using our platform for any malicious or harmful activities, including but not limited to hacking, phishing, or distributing malware.
+
+- Abuse of Resources: Engaging in activities that may overload, harm, or impair the functionality of our application, including the use of automated tools without our consent.
+
+- Illegal Content: Uploading, sharing, or promoting any content that violates applicable laws, including but not limited to copyright infringement, hate speech, or illegal activities.
+
+- False Information: Providing false, misleading, or inaccurate information when creating an account, submitting reviews, or engaging in any other activity on our platform.
+
+- Harassment: Engaging in any form of harassment, bullying, or threatening behavior towards other users or administrators.
+
+- Violation of Privacy: Unauthorized attempts to access or collect private information from other users.
+
+2. User Responsibilities
+
+- Compliance with Laws: Users are expected to comply with all applicable laws and regulations while using our application.
+
+- Account Security: Users are responsible for maintaining the security of their accounts, including passwords and access credentials.
+
+- Respectful Conduct: Users are expected to treat others with respect and courtesy while using our platform.
+
+3. Reporting Violations
+
+If you become aware of any violation of this Acceptable Use Policy or suspect unauthorized or inappropriate activities, please report it to admin@admin.com.
+
+4. Consequences of Violation
+
+Violations of this policy may result in actions such as account suspension, content removal, or legal action, depending on the severity and nature of the violation.
+
+5. Policy Changes
+
+We may update this Acceptable Use Policy periodically. Users will be notified of significant changes through the platform or via email.
+
+If you have questions or concerns about this policy, please contact us at admin@admin.com

@@ -43,6 +43,48 @@ export default function HomePage() {
   const [editDescription, setEditDescription] = useState('');
   const [isEditPublic, setIsEditPublic] = useState(false);
 
+  const [userLists, setUserLists] = useState([]);
+  const [username, setUsername] = useState('');
+
+  // shows the user's lists
+  useEffect(() => {
+    const fetchUserNames = async () => {
+      const token = localStorage.getItem('token');
+
+      const userResponse = await fetch('http://localhost:5001/superheroes/verify/tokenEmail', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+      });
+      if(!userResponse.ok){
+        const errorData = await userResponse.json(); // Parse the error response to JSON
+        console.error(`HTTP error! status: ${userResponse.status}, message: ${errorData.error}`); // Print the error message
+        throw new Error(`HTTP error! status: ${userResponse.status}`);
+      }
+      const userData = await userResponse.json();
+      return userData.username;
+    };
+
+    
+    const fetchUserLists = async () => {
+      const username = await fetchUserNames();
+      const response = await fetch(`http://localhost:5001/superheroes/userlists/${username}`, {
+        method: 'GET',
+      });
+      if(!response.ok){
+        const errorData = await response.json();
+        console.error(`HTTP error! status: ${response.status}, message: ${errorData.error}`); // Print the error message
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(data);
+      setUserLists(data);
+      setUsername(username);
+    };
+    fetchUserLists();
+  },[]);
+
   // Function to handle create list
   const handleCreateList = async (listName, heroIds, description, isPublic) => {
     // console.log('create button clicked');
@@ -280,6 +322,7 @@ export default function HomePage() {
 
         <h1>Superheroes!</h1>
         <h3>Welcome! You Are Logged In, Have Fun!</h3>
+        <Link href='/'>Public Home Page</Link>
         <div className={styles.results} id = "results"></div>
         <div className={styles.favDiv}>
           <h2>Favourites List</h2>
@@ -404,6 +447,57 @@ export default function HomePage() {
           ))}
         </div>
 
+        <h2>Your Lists: </h2>
+        <div id="userLists">
+          {Array.isArray(userLists) && userLists.length >0 && userLists.map((list, index) => {
+            const averageRating = list.ratings.length > 0 ? 
+            list.ratings.reduce((a, b) => a + b, 0) / list.ratings.length : 
+            0;
+            
+            return(
+              <div key={index}>
+                <div>List Name: {list.name}</div>
+                <div>Author: {list.username}</div>
+                <div>Number of Heroes: {list.heroes.length}</div>
+                <div>Average Rating: {averageRating}</div>
+                <div> isPublic: {list.isPublic ? 'true' : 'false'}</div>
+                <button onClick={() =>{
+                  if (expandedList.includes(index)) {
+                    setExpandedList(expandedList.filter(i => i !== index));
+                  } else {
+                    setExpandedList([...expandedList, index]);
+                  }
+                }}>Expand</button>
+                {expandedList.includes(index) && (
+                  <div>
+                    <div>List Name: {list.name}</div>
+                    <div>Heroes: 
+                      {list.heroes.map((hero, heroIndex)=>(
+                        <div key={heroIndex}>
+                          <div>Name: {hero.name}</div>
+                          <div>Info: 
+                            <ul>
+                              {Object.keys(hero.info).map((key,i)=>(
+                                <li key={i}>{key}: {hero.info[key]}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>Powers:
+                            <ul>
+                              {Object.keys(hero.powers).map((key,i)=>(
+                                <li key={i}>{key}: {hero.powers[key]}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })};
+        </div>
       </main>
       </>
   )

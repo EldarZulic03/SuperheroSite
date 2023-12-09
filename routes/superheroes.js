@@ -9,11 +9,48 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 
 
+
 // Get all superheroes
 router.get('/', async (req, res) => {
   try {
     const superheroes = await superheroInfo.find();
     res.json(superheroes);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// get specific user list
+router.get('/userlists/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const userLists = await heroList.find({ username: userId }).lean();
+    
+    const modifiedLists = await Promise.all(userLists.map(async (list) => {
+      const heroes = await superheroInfo.find({
+        id: { $in: list.heroes }
+      }).select('-_id -__v');
+
+      const heroesWithPowers = await Promise.all(heroes.map(async (hero) => {
+        let powers = await superheroPowers.findOne({ hero_names: hero.name });
+        powers = remove(powers ? powers.toObject() : {});
+        delete powers._id;
+        delete powers.__v;
+        delete powers.hero_names;
+        return {
+          name: hero.name,
+          info: hero,
+          powers: powers
+        };
+      }));
+
+      list.heroes = heroesWithPowers;
+      delete list._id;
+      delete list.__v;
+      return list;
+    }));
+
+    res.json(modifiedLists);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -184,6 +221,10 @@ router.get('/publiclists', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+
+
+
 
 // Get one superhero
 router.get('/:id', async (req, res) => {

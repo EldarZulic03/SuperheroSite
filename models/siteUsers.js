@@ -28,6 +28,11 @@ const siteUserSchema = mongoose.Schema({
         type: [String],
         default: [],
         required: true
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+        required: true
     }
 });
 
