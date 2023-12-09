@@ -304,7 +304,7 @@ export default function Home() {
         
         <h2>Public Lists:</h2>
         <div id="publicListsDisplay">
-          {publicLists && publicLists.map((list, index) => (
+          {Array.isArray(publicLists) && publicLists.map((list, index) => (
           <div key={index}>
             <div>List Name: {list.name}</div>
             <div>Author: {list.username}</div>
