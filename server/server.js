@@ -11,7 +11,7 @@ const path = require('path');
 // console.log("DATABASE_URL:", process.env.DATABASE_URL); // testing
 
 //connect to database
-mongoose.connect(process.env.DATABASE_URL);
+mongoose.connect('mongodb://localhost/superhero_database');
 
 
 const db = mongoose.connection
@@ -80,6 +80,35 @@ const loadDataIfEmpty = async (fileName, collection) => {
 loadDataIfEmpty('superhero_info.json', 'superheroinfo');
 loadDataIfEmpty('superhero_powers.json', 'superheropowers');
 
+const loadAdminIfEmpty = async () => {
+    try {
+        const collection = 'siteUsers';
+        db.collection(collection).estimatedDocumentCount().then(count => {
+            if(count === 0){
+                const admin = {
+                    email: 'admin@admin.com',
+                    password: process.env.ADMIN_PW,
+                    username: 'admin',
+                    verification: true,
+                    activated: true,
+
+                };
+                db.collection(collection).insertOne(admin, (err, res) => {
+                    if(err){
+                        throw err;
+                    }
+                    console.log("Admin account added");
+                });
+            } else {
+                console.log("Admin account already exists");
+            }
+        })
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+loadAdminIfEmpty();
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../clientapp/out/landing.html'));
 });

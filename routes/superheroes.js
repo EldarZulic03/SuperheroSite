@@ -3,7 +3,7 @@ const router = express.Router();
 const superheroInfo = require('../models/superhero_info');
 const superheroPowers = require('../models/superhero_powers');
 const heroList = require('../models/heroLists');
-const users = require('../models/siteUsers');
+const siteUsers = require('../models/siteUsers');
 const argon2 = require('argon2');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
@@ -255,7 +255,7 @@ router.post('/newlists',checkToken, async (req, res) => {
   const { name, heroIds, description, isPublic, email } = req.body;
 
   console.log(email);
-  const user = await users.findOne({ email: email });
+  const user = await siteUsers.findOne({ email: email });
 
 
   if (!name || !heroIds) {
@@ -287,7 +287,7 @@ router.post('/newlists/:name', checkToken, async (req, res) => {
   const { name, heroIds, description, isPublic, email } = req.body;
 
   console.log(email);
-  const user = await users.findOne({ email: email });
+  const user = await siteUsers.findOne({ email: email });
 
   if (!name || !heroIds) {
     return res.status(400).json({ error: 'Both the Name and Hero IDs are Needed in the Request Body' });
@@ -327,7 +327,7 @@ router.get('/verify/tokenEmail', async (req, res) => {
     if(err){
       return res.status(403).json({ error: 'Invalid token' });
     }
-    let email = await users.findOne({ email: user.email });
+    let email = await siteUsers.findOne({ email: user.email });
     if (!email) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -438,7 +438,7 @@ router.post('/register', async (req, res) => {
   }
 
 
-  const existingUser = await users.findOne({ email: email });
+  const existingUser = await siteUsers.findOne({ email: email });
 
   // check if the user already exists
   if (existingUser) {
@@ -449,7 +449,7 @@ router.post('/register', async (req, res) => {
   const hashedPassword = await argon2.hash(password);
 
   //creates the new user
-  const newUser = new users({ email: email, password: hashedPassword, username: username });
+  const newUser = new siteUsers({ email: email, password: hashedPassword, username: username });
   await newUser.save();
 
   verifyAccount(newUser.username, newUser.email);
@@ -465,7 +465,7 @@ router.get('/verify/account', async (req, res) => {
     return res.status(400).json({ error: 'Email is Needed in the Request Query' });
   }
 
-  const existingUser = await users.findOne({ email: email });
+  const existingUser = await siteUsers.findOne({ email: email });
 
   if (!existingUser) {
     return res.status(404).json({ error: 'User Not Found' });	
@@ -496,7 +496,7 @@ router.post('/login', async (req, res) => {
     return res.status(400).json({ error: 'Enter a Valid Email' });
   }
 
-  const existingUser = await users.findOne({ email: email });
+  const existingUser = await siteUsers.findOne({ email: email });
 
   if (!existingUser) {
     return res.status(404).json({ error: 'User Not Found' });
@@ -535,7 +535,7 @@ router.post('/changePassword', checkToken, async (req, res) => {
     return res.status(400).json({ error: 'Email, Password, and New Password are Needed in the Request Body' });
   }
 
-  const existingUser = await users.findOne({ email: email });
+  const existingUser = await siteUsers.findOne({ email: email });
 
   if (!existingUser) {
     return res.status(404).json({ error: 'User Not Found' });
