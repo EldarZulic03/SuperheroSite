@@ -11,7 +11,9 @@ const path = require('path');
 // console.log("DATABASE_URL:", process.env.DATABASE_URL); // testing
 
 //connect to database
-mongoose.connect('mongodb://localhost/superhero_database');
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Database Connected Successfully'))
+  .catch(error => console.log(error));
 
 
 const db = mongoose.connection
@@ -39,6 +41,7 @@ db.once('open', () =>console.log('Connected to Database'));
 app.use(express.json());
 
 const superheroesRouter = require('../routes/superheroes');
+const { error } = require('console');
 app.use('/superheroes', superheroesRouter);
 app.use(express.static(path.join(__dirname, '../clientapp/out')));
 
@@ -109,6 +112,8 @@ const loadAdminIfEmpty = async () => {
 };
 
 loadAdminIfEmpty();
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../clientapp/out/landing.html'));
-});
+
+
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../clientapp/out/landing.html'));
+// });
