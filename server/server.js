@@ -19,22 +19,22 @@ db.on('error', (error) => console.error(error));
 db.once('open', () =>console.log('Connected to Database'));
 
 
-db.once('open', () => {
-    console.log('Connected to Database');
-    mongoose.connection.db.listCollections().toArray(function (err, names) {
-      if (err) {
-        console.error(err);
-      } else {
-        if (names.length === 0) {
-          console.log('No collections in database');
-        } else {
-          names.forEach(function(e,i,a) {
-            console.log("--->>", e.name);
-          });
-        }
-      }
-    });
-  });
+// db.once('open', () => {
+//     console.log('Connected to Database');
+//     mongoose.connection.db.listCollections().toArray(function (err, names) {
+//       if (err) {
+//         console.error(err);
+//       } else {
+//         if (names.length === 0) {
+//           console.log('No collections in database');
+//         } else {
+//           names.forEach(function(e,i,a) {
+//             console.log("--->>", e.name);
+//           });
+//         }
+//       }
+//     });
+//   });
 
 app.use(express.json());
 
