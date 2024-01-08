@@ -672,6 +672,7 @@ const superhero_powersSchema = new mongoose.Schema({
         type: String,
         required: true
       }
-})
+},
+{collection:'superheropowers'});
 
 module.exports = mongoose.model('superheropowers', superhero_powersSchema);

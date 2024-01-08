@@ -29,6 +29,7 @@ const siteUserSchema = mongoose.Schema({
         default: [],
         required: true
     }
-});
+},
+{collection: 'siteUsers'});
 
 module.exports = mongoose.model('siteUsers', siteUserSchema);

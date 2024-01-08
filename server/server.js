@@ -5,35 +5,47 @@ const mongoose = require('mongoose');
 const port = 5001; //port number
 const fs = require('fs');
 const path = require('path');
+const siteUsers = require('../models/siteUsers');
+const superheroinfo = require('../models/superhero_info');
+const superheropowers = require('../models/superhero_powers');
+
+async function startServer() {
+  try {
+    
+
+    await mongoose.connect('mongodb://0.0.0.0:27017/superhero_database');
+    console.log('Database Connected Successfully');
+
+    const db = mongoose.connection;
+    db.on('error', (error) => console.error(error));
+    db.once('connected', () => console.log('Connected to Database'));
+
+    if (mongoose.connection.readyState === 1) {
+
+        app.use(express.static(path.join(__dirname, '../clientapp/out'))); 
+        app.use(express.json());
+    
+        const superheroesRouter = require('../routes/superheroes');
+        app.use('/superheroes', superheroesRouter);
+    
+        // Load your data here
+        await loadDataIfEmpty(db,'superhero_info.json', 'superheroinfo');
+        await loadDataIfEmpty(db,'superhero_powers.json', 'superheropowers');
+        await loadAdminIfEmpty(db);
+    
+        app.listen(port, () => console.log(`Server Started! running on port ${port}`));
+    }
+   
+  } catch (error) {
+    console.error('Error connecting to database:', error);
+  }
+}
+
+startServer();
 
 
 
-// console.log("DATABASE_URL:", process.env.DATABASE_URL); // testing
-
-//connect to database
-mongoose.connect('mongodb://0.0.0.0:27017/superhero_database')
-  .then(() => console.log('Database Connected Successfully'))
-  .catch(error => console.log(error));
-
-
-const db = mongoose.connection
-db.on('error', (error) => console.error(error));
-db.once('connected', () =>console.log('Connected to Database'));
-
-app.listen(port, () => console.log(`Server Started! running on port ${port}`));
-
-app.use(express.static(path.join(__dirname, '../clientapp/out')));
-app.use(express.json());
-
-const superheroesRouter = require('../routes/superheroes');
-app.use('/superheroes', superheroesRouter);
-
-
-// app.use(express.urlencoded({extended:true}));
-
-
-
-function loadData(fileName, collection){
+function loadData(db, fileName, collection){
 
     const filePath = ("../" + fileName);
     let info = fs.readFileSync(filePath);
@@ -50,11 +62,11 @@ function loadData(fileName, collection){
 // loadData('superhero_powers.json', 'superheropowers'); testing
 
 //if collection is empty then load data if not then do nothing
-const loadDataIfEmpty = async (fileName, collection) => {
+const loadDataIfEmpty = async (db,fileName, collection) => {
     try {
         db.collection(collection).estimatedDocumentCount().then(count =>{
             if(count === 0){
-                loadData(fileName, collection);
+                loadData(db, fileName, collection);
             }else{
                 console.log("Data already exists in collection: " + collection + "count: " + count);
             }
@@ -64,10 +76,8 @@ const loadDataIfEmpty = async (fileName, collection) => {
     }
 };
 
-loadDataIfEmpty('superhero_info.json', 'superheroinfo');
-loadDataIfEmpty('superhero_powers.json', 'superheropowers');
 
-const loadAdminIfEmpty = async () => {
+const loadAdminIfEmpty = async (db) => {
     try {
         const collection = 'siteUsers';
         db.collection(collection).estimatedDocumentCount().then(count => {
@@ -95,9 +105,8 @@ const loadAdminIfEmpty = async () => {
     }
 };
 
-loadAdminIfEmpty();
 
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../clientapp/out/landing.html'));
-});
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../clientapp/out/landing.html'));
+// });
