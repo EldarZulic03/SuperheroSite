@@ -11,43 +11,27 @@ const path = require('path');
 // console.log("DATABASE_URL:", process.env.DATABASE_URL); // testing
 
 //connect to database
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://0.0.0.0:27017/superhero_database')
   .then(() => console.log('Database Connected Successfully'))
   .catch(error => console.log(error));
 
 
 const db = mongoose.connection
 db.on('error', (error) => console.error(error));
-db.once('open', () =>console.log('Connected to Database'));
+db.once('connected', () =>console.log('Connected to Database'));
 
+app.listen(port, () => console.log(`Server Started! running on port ${port}`));
 
-// db.once('open', () => {
-//     console.log('Connected to Database');
-//     mongoose.connection.db.listCollections().toArray(function (err, names) {
-//       if (err) {
-//         console.error(err);
-//       } else {
-//         if (names.length === 0) {
-//           console.log('No collections in database');
-//         } else {
-//           names.forEach(function(e,i,a) {
-//             console.log("--->>", e.name);
-//           });
-//         }
-//       }
-//     });
-//   });
-
+app.use(express.static(path.join(__dirname, '../clientapp/out')));
 app.use(express.json());
 
 const superheroesRouter = require('../routes/superheroes');
-const { error } = require('console');
 app.use('/superheroes', superheroesRouter);
-app.use(express.static(path.join(__dirname, '../clientapp/out')));
+
 
 // app.use(express.urlencoded({extended:true}));
 
-app.listen(port, () => console.log('Server Started'));
+
 
 function loadData(fileName, collection){
 
@@ -114,6 +98,6 @@ const loadAdminIfEmpty = async () => {
 loadAdminIfEmpty();
 
 
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../clientapp/out/landing.html'));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../clientapp/out/landing.html'));
+});
