@@ -9,30 +9,49 @@ const siteUsers = require('../models/siteUsers');
 const superheroinfo = require('../models/superhero_info');
 const superheropowers = require('../models/superhero_powers');
 
+let db = null;
+
+async function initialStart(){
+    try {
+        await mongoose.connect('mongodb://0.0.0.0:27017/superhero_database');
+        console.log('initial start: ' + mongoose.connection.readyState);
+        mongoose.connection.once('connected', () => console.log('Connected to Database'));
+        db = mongoose.connection;
+        db.on('error', (error) => console.error(error));
+        
+    }
+    catch (error) {
+        console.error('Error connecting to database:', error);
+      }
+
+}
+
 async function startServer() {
   try {
     
+    
+    // await mongoose.connect('mongodb://0.0.0.0:27017/superhero_database');
+    
+    // console.log('Database Connected Successfully');
+    
+    // db = mongoose.connection;
 
-    await mongoose.connect('mongodb://0.0.0.0:27017/superhero_database');
-    console.log('Database Connected Successfully');
-
-    const db = mongoose.connection;
-    db.on('error', (error) => console.error(error));
-    db.once('connected', () => console.log('Connected to Database'));
-
+    console.log('start server: ' + mongoose.connection.readyState);
     if (mongoose.connection.readyState === 1) {
 
         app.use(express.static(path.join(__dirname, '../clientapp/out'))); 
         app.use(express.json());
     
-        const superheroesRouter = require('../routes/superheroes');
-        app.use('/superheroes', superheroesRouter);
+        
     
         // Load your data here
         await loadDataIfEmpty(db,'superhero_info.json', 'superheroinfo');
         await loadDataIfEmpty(db,'superhero_powers.json', 'superheropowers');
         await loadAdminIfEmpty(db);
-    
+        
+        const superheroesRouter = require('../routes/superheroes');
+        app.use('/superheroes', superheroesRouter);
+        
         app.listen(port, () => console.log(`Server Started! running on port ${port}`));
     }
    
@@ -41,7 +60,7 @@ async function startServer() {
   }
 }
 
-startServer();
+initialStart().then(startServer);
 
 
 
@@ -58,10 +77,7 @@ function loadData(db, fileName, collection){
         // console.log("Data Elements added: " + res.insertedCoun); //testing
     });
 }
-// loadData('superhero_info.json', 'superheroinfo');
-// loadData('superhero_powers.json', 'superheropowers'); testing
 
-//if collection is empty then load data if not then do nothing
 const loadDataIfEmpty = async (db,fileName, collection) => {
     try {
         db.collection(collection).estimatedDocumentCount().then(count =>{
