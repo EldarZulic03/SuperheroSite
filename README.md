@@ -26,7 +26,7 @@ bun dev
 
 Open [http://localhost:5001](http://localhost:5001) with your browser to see the result.
 
-### If you would like to run the the server, navigate to the server directory and run: 
+## If you would like to run the the server, navigate to the server directory and run: 
 
 ```bash
 node server.js
